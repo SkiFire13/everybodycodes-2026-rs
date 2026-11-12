@@ -1,3 +1,5 @@
+use everybodycodes_helper::register;
+
 fn compute(base: &[u8], digits: &[u8]) -> u64 {
     let base = base.iter().map(|&b| (b - b'0') as u64).rev();
     let digits = digits.iter().map(|&b| (b - b'0') as u64).rev();
@@ -8,6 +10,7 @@ fn compute(base: &[u8], digits: &[u8]) -> u64 {
         .sum()
 }
 
+#[register]
 pub fn part1(input: &str) -> u64 {
     let mut tot = 0;
 
@@ -20,6 +23,7 @@ pub fn part1(input: &str) -> u64 {
     tot
 }
 
+#[register]
 pub fn part2(input: &str) -> u64 {
     let mut tot = 0;
 
@@ -32,6 +36,7 @@ pub fn part2(input: &str) -> u64 {
     tot
 }
 
+#[register]
 pub fn part3(input: &str) -> u64 {
     let mut tot = 0;
     let mut buf = Vec::new();

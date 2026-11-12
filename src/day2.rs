@@ -1,5 +1,7 @@
 use std::collections::VecDeque;
 
+use everybodycodes_helper::register;
+
 fn solve(input: &str) -> u64 {
     let mut tot = 0;
     let mut next = vec![Vec::new(); 256];
@@ -53,14 +55,17 @@ fn solve(input: &str) -> u64 {
     tot
 }
 
+#[register]
 pub fn part1(input: &str) -> u64 {
     solve(input)
 }
 
+#[register]
 pub fn part2(input: &str) -> u64 {
     solve(input)
 }
 
+#[register]
 pub fn part3(input: &str) -> u64 {
     solve(input)
 }
