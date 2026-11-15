@@ -1,60 +1,71 @@
-use std::{cmp::Reverse, collections::BinaryHeap};
-
 use everybodycodes_helper::register;
 
-const NEIGHBOURS_1: &[isize] = &[-1, 1];
-const NEIGHBOURS_3: &[isize] = &[-3, -2, -1, 1, 2, 3];
-
-fn parse(input: &str) -> Vec<Vec<usize>> {
+fn parse(input: &str) -> (usize, Vec<(usize, usize)>) {
     let input = input.strip_prefix("portals: ").unwrap();
     let (size, rest) = input.split_once("\n\n").unwrap();
     let size = size.parse::<usize>().unwrap();
-    let mut edges = vec![Vec::new(); size];
+    let mut edges = Vec::new();
     for line in rest.lines() {
         let (u, v) = line.split_once(" ").unwrap();
         let u = u.parse::<usize>().unwrap() - 1;
         let v = v.parse::<usize>().unwrap() - 1;
-        edges[u].push(v);
-        edges[v].push(u);
+        edges.push((u, v));
     }
-    edges
+    (size, edges)
 }
 
-fn find_distances(edges: &[Vec<usize>], src: usize, neighbours: &[isize]) -> Vec<u64> {
-    let mut queue = BinaryHeap::from([(Reverse(0), src)]);
-    let mut distances = vec![u64::MAX; edges.len()];
-    distances[src] = 0;
+fn find_all_distances(edges: &[(usize, usize)], n: usize, neighbours: usize) -> Vec<u64> {
+    let mut distances = vec![n as u64; n * n];
 
-    while let Some((Reverse(d), src)) = queue.pop() {
-        if distances[src] != d {
-            continue;
-        }
+    for i in 0..n {
+        distances[n * i + i] = 0;
+    }
 
-        let neighbours = neighbours
-            .iter()
-            .map(|&dn| (src + edges.len()).wrapping_add_signed(dn) % edges.len());
-
-        for dst in edges[src].iter().copied().chain(neighbours) {
-            let nd = d + 1;
-            if distances[dst] > nd {
-                distances[dst] = nd;
-                queue.push((Reverse(nd), dst));
+    for i in 0..n - 1 {
+        for j in i + 1..n {
+            if j - i <= neighbours || n - (j - i) <= neighbours {
+                distances[n * i + j] = 1;
+                distances[n * j + i] = 1;
             }
         }
+    }
+
+    for &(u, v) in edges {
+        distances[n * u + v] = 1;
+        distances[n * v + u] = 1;
+    }
+
+    for m in 0..n {
+        propagate_middle(&mut distances, n, m);
     }
 
     distances
 }
 
-fn find_tot_distance(edges: &[Vec<usize>], neighbours: &[isize]) -> u64 {
-    let mut tot = 0;
+fn propagate_middle(distances: &mut [u64], n: usize, m: usize) {
+    for s in 0..n - 1 {
+        let sm = distances[n * s + m];
+        for e in s + 1..n {
+            let me = distances[n * m + e];
+            let se = distances[n * s + e];
+            if sm + me < se {
+                distances[n * s + e] = sm + me;
+                distances[n * e + s] = sm + me;
+            }
+        }
+    }
+}
 
-    for src in 0..edges.len() {
-        let distances = find_distances(edges, src, neighbours);
-        tot += distances.into_iter().sum::<u64>();
+fn distances_add_edge(distances: &mut [u64], n: usize, u: usize, v: usize) {
+    if distances[n * u + v] == 1 {
+        return;
     }
 
-    tot
+    distances[n * u + v] = 1;
+    distances[n * v + u] = 1;
+
+    propagate_middle(distances, n, u);
+    propagate_middle(distances, n, v);
 }
 
 const DISPS: [[(usize, usize); 4]; 105] = {
@@ -100,42 +111,32 @@ const DISPS: [[(usize, usize); 4]; 105] = {
 
 #[register]
 pub fn part1(input: &str) -> u64 {
-    let edges = parse(input);
+    let (n, edges) = parse(input);
 
-    let n = edges.len() as u64;
-    let base = n
-        * (0..edges.len() as u64)
-            .map(|e| u64::min(e, n - e))
-            .sum::<u64>();
+    let base = n * (0..n).map(|e| usize::min(e, n - e)).sum::<usize>();
 
-    let tot = find_tot_distance(&edges, NEIGHBOURS_1);
+    let tot = find_all_distances(&edges, n, 1).into_iter().sum::<u64>();
 
-    base - tot
+    base as u64 - tot
 }
 
 #[register]
 pub fn part2(input: &str) -> u64 {
-    let mut edges = parse(input);
+    let (n, edges) = parse(input);
 
-    let no_edges = vec![Vec::new(); edges.len()];
-    let base = find_tot_distance(&no_edges, NEIGHBOURS_3);
-
+    let base = find_all_distances(&[], n, 3).into_iter().sum::<u64>();
+    let distances = find_all_distances(&edges, n, 3);
     let mut best = base;
 
-    for u in 0..edges.len() - 1 {
-        for v in u + 1..edges.len() {
-            if edges[u].contains(&v) {
+    for u in 0..n - 1 {
+        for v in u + 1..n {
+            if edges.contains(&(u, v)) || edges.contains(&(v, u)) {
                 continue;
             }
 
-            edges[u].push(v);
-            edges[v].push(u);
-
-            let tot = find_tot_distance(&edges, NEIGHBOURS_3);
-            best = best.min(tot);
-
-            edges[u].pop();
-            edges[v].pop();
+            let mut distances = distances.clone();
+            distances_add_edge(&mut distances, n, u, v);
+            best = best.min(distances.into_iter().sum::<u64>());
         }
     }
 
@@ -144,14 +145,13 @@ pub fn part2(input: &str) -> u64 {
 
 #[register]
 pub fn part3(input: &str) -> u64 {
-    let mut edges = parse(input);
+    let (n, edges) = parse(input);
 
-    let no_edges = vec![Vec::new(); edges.len()];
-    let base = find_tot_distance(&no_edges, NEIGHBOURS_3);
+    let base = find_all_distances(&[], n, 3).into_iter().sum::<u64>();
 
+    let distances = find_all_distances(&edges, n, 3);
     let mut best = base;
 
-    let n = edges.len();
     for s in 0..n / 8 {
         let mut conns = [0; 8];
         for i in 0..4 {
@@ -160,19 +160,14 @@ pub fn part3(input: &str) -> u64 {
         }
 
         for disp in &DISPS {
+            let mut distances = distances.clone();
+
             for &(srci, dsti) in disp {
                 let (u, v) = (conns[srci], conns[dsti]);
-
-                edges[u].push(v);
-                edges[v].push(u);
+                distances_add_edge(&mut distances, n, u, v);
             }
 
-            let tot = find_tot_distance(&edges, NEIGHBOURS_3);
-            best = best.min(tot);
-
-            for u in conns {
-                edges[u].pop();
-            }
+            best = best.min(distances.into_iter().sum::<u64>());
         }
     }
 
