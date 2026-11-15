@@ -75,30 +75,28 @@ const DISPS: [[(usize, usize); 4]; 105] = {
     let mut took = [false; 8];
 
     macro_rules! combine_pair {
-        ($i0:literal = $p0:ident, $i1:literal = $p1:ident, || { $($rest:tt)* }) => {
-            #[allow(unused)]
-            {
-                let mut $p0 = 0;
-                while took[$p0] { $p0 += 1; }
-                took[$p0] = true;
-                let mut $p1 = $p0 + 1;
-                while $p1 < 8 {
-                    if !took[$p1] {
-                        took[$p1] = true;
-                        $($rest)*;
-                        took[$p1] = false;
-                    }
-                    $p1 += 1;
+        (|$p0:ident, $p1:ident| { $($rest:tt)* }) => {
+            let mut $p0 = 0;
+            while took[$p0] { $p0 += 1; }
+            took[$p0] = true;
+            let mut $p1 = $p0 + 1;
+            while $p1 < 8 {
+                if !took[$p1] {
+                    took[$p1] = true;
+                    $($rest)*
+                    took[$p1] = false;
                 }
-                took[$p0] = false;
+                $p1 += 1;
             }
+            took[$p0] = false;
+            _ = took;
         };
     }
 
-    combine_pair!(0 = p0, 1 = p1, || {
-        combine_pair!(2 = p2, 3 = p3, || {
-            combine_pair!(4 = p4, 5 = p5, || {
-                combine_pair!(6 = p6, 7 = p7, || {
+    combine_pair!(|p0, p1| {
+        combine_pair!(|p2, p3| {
+            combine_pair!(|p4, p5| {
+                combine_pair!(|p6, p7| {
                     disps[di] = [(p0, p1), (p2, p3), (p4, p5), (p6, p7)];
                     di += 1;
                 });
