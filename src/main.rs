@@ -21,6 +21,8 @@ mod day17;
 mod day18;
 mod day19;
 
+mod day20;
+
 fn main() {
     everybodycodes_helper::run(init_client!(), "2026");
 }
