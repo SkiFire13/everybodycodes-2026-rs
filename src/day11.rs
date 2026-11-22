@@ -1,4 +1,4 @@
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 fn parse(input: &str) -> (usize, Vec<(usize, usize)>) {
     let input = input.strip_prefix("portals: ").unwrap();

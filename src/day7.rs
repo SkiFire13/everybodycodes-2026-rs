@@ -1,4 +1,4 @@
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 fn parse(input: &str) -> (Vec<u64>, Vec<Vec<usize>>, usize) {
     let mut max = (0, 0);

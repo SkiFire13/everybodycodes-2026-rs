@@ -4,7 +4,7 @@ use std::{
     sync::Arc,
 };
 
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 type Pos = (usize, usize);
 type Dir = (isize, isize);

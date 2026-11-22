@@ -1,6 +1,6 @@
 use std::{collections::VecDeque, ops::Deref};
 
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 const UP_LEFT: (isize, isize) = (-1, -1);
 const UP_RIGHT: (isize, isize) = (1, -1);

@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 fn solve(input: &str) -> u64 {
     let mut tot = 0;

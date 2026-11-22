@@ -1,6 +1,6 @@
 use std::{cmp::Reverse, collections::HashMap};
 
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 fn parse_input(input: &str) -> impl Iterator<Item = (u64, u64, u64, u64)> {
     input.lines().map(|line| {

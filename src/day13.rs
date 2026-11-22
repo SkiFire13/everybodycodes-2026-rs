@@ -1,6 +1,6 @@
 use std::array;
 
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 fn parse(input: &str) -> ([i64; 3], [i64; 3], [i64; 3], [i64; 3]) {
     let rest = input.strip_prefix("hands ").unwrap();

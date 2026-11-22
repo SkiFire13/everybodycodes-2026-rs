@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 fn reach<'s>(dst: &'s str, graph: &HashMap<&'s str, Vec<&'s str>>) -> HashSet<&'s str> {
     let mut seen = HashSet::from([dst]);

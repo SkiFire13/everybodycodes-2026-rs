@@ -1,4 +1,4 @@
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 fn visit_shape(
     grid: &[&[u8]],

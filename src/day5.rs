@@ -1,4 +1,4 @@
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 fn parse(input: &str) -> (Vec<bool>, usize, usize) {
     let mut light = vec![false; input.len()];

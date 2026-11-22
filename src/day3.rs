@@ -1,4 +1,4 @@
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 fn compute(base: &[u8], digits: &[u8]) -> u64 {
     let base = base.iter().map(|&b| (b - b'0') as u64).rev();

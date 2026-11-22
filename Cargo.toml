@@ -4,10 +4,4 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-# ureq = { version = "3", features = ["cookies", "json"] }
-# serde = { version = "1", features = ["derive"] }
-# hex = "0.4"
-# aes = "0.9"
-# cbc = { version = "0.2", features = ["alloc"] }
-
-everybodycodes-helper = { path = "../rust-everybodycodes-helper/everybodycodes-helper" }
+quest-helper = { git = "https://github.com/SkiFire13/quest-helper-rs" }

@@ -1,4 +1,4 @@
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 #[register]
 pub fn part1(input: &str) -> u64 {

@@ -3,7 +3,7 @@ use std::{
     collections::{BinaryHeap, HashMap},
 };
 
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 fn parse(input: &str) -> impl Iterator<Item = (usize, u64, u64)> {
     input.lines().map(|line| {

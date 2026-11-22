@@ -3,7 +3,7 @@ use std::{
     collections::{BinaryHeap, HashMap, HashSet},
 };
 
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 const ROOT: u8 = b'\0';
 

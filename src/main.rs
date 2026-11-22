@@ -1,4 +1,4 @@
-use everybodycodes_helper::init_client;
+use quest_helper::{init_everybodycodes_client, setup_info};
 
 mod day1;
 mod day2;
@@ -24,5 +24,9 @@ mod day19;
 mod day20;
 
 fn main() {
-    everybodycodes_helper::run(init_client!(), "2026");
+    quest_helper::run(
+        init_everybodycodes_client!(),
+        "2026",
+        setup_info!("./day_template.rs"),
+    );
 }

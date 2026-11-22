@@ -1,4 +1,4 @@
-use everybodycodes_helper::register;
+use quest_helper::register;
 
 fn solve(mut state: Vec<u8>, mut f: impl FnMut(usize)) {
     let mut next_state = state.clone();
